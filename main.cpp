@@ -105,18 +105,18 @@ int main(void)
         printf("Fail to initialize Motion Manager!\n");
             return 0;
     }
+
     MotionManager::GetInstance()->AddModule((MotionModule*)Action::GetInstance());
     LinuxMotionTimer *motion_timer = new LinuxMotionTimer(MotionManager::GetInstance());
     motion_timer->Start();
     /////////////////////////////////////////////////////////////////////
-
       
     /////////////////// Run Motion Script //////////////////////////
     
     //Initialize variables
     int numMotions = 5;
-    int motionSequence[numMotions] = {60, 61, 62, 61, 62};  // List of motions to perform
-    int motionTimings[numMotions] = {2, 2, 2, 2, 2}; // Time in seconds to pause before the next motion
+    int motionSequence[5] = {60, 61, 62, 61, 62};  // List of motions to perform
+    int motionTimings[5] = {2, 2, 2, 2, 2}; // Time in seconds to pause before the next motion
     
     int currentMotion = 0;
 
@@ -132,12 +132,17 @@ int main(void)
     while(Action::GetInstance()->IsRunning()) usleep(8*1000);
     // -----------------------
 
+
     printf("Press the ENTER key to begin!\n");
     char mode = getchar();
-    
+
     // Run through the list of motions
-    for(currentMotion; currentMotion < numMotions; currentMotin++)
+    for(currentMotion=0; currentMotion < numMotions; currentMotion++)
+    {
         Action::GetInstance()->Start(motionSequence[currentMotion]); // Call the motion
+        while(Action::GetInstance()->IsRunning()) usleep(8*1000); // 1 second = 1,000,000 us
+        usleep(motionTimings[currentMotion]*1000000); // Wait for specified delay
+    }
    
 
     return 0;
