@@ -114,9 +114,10 @@ int main(void)
     /////////////////// Run Motion Script //////////////////////////
     
     //Initialize variables
-    int numMotions = 5;
-    int motionSequence[5] = {60, 61, 62, 61, 62};  // List of motions to perform
-    int motionTimings[5] = {2, 2, 2, 2, 2}; // Time in seconds to pause before the next motion
+    int numMotions = 35;
+    int motionSequence[35] = { 60, 61,  62,  63,   66,   66,  66,  67,  66,  66,  66,  67,  66,  66,  66,  67,  66,  66, 64,  66,  66,  67,  66,  66,  67,  66,  65,  66,  66,  66,  67, 66,  66,  66,  67};  // List of motions to perform
+    int motionTimings[35] =  {0.5,  5, 0.5,  15,  0.3,  0.3, 0.3, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 1.3,  4, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3,   3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3}; // Time in seconds to pause before the next motion
+//53 22 38
     
     int currentMotion = 0;
 
@@ -128,7 +129,7 @@ int main(void)
     // ---- Go to init pose -----------
     MotionManager::GetInstance()->SetEnable(true); 
 
-    Action::GetInstance()->Start(1);    /* Init(stand up) pose */
+    Action::GetInstance()->Start(60);    /* Init(stand up) pose */
     while(Action::GetInstance()->IsRunning()) usleep(8*1000);
     // -----------------------
 
@@ -143,7 +144,9 @@ int main(void)
         while(Action::GetInstance()->IsRunning()) usleep(8*1000); // 1 second = 1,000,000 us
         usleep(motionTimings[currentMotion]*1000000); // Wait for specified delay
     }
-   
+
+    // Make sure the last command has finished   
+    while(Action::GetInstance()->IsRunning()) usleep(8*1000); // 1 second = 1,000,000 us
 
     return 0;
 }
